@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APLIKASI DAFTAR I</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0052d4">
+    <style>
+        :root {
+            --biru-glossy: linear-gradient(to bottom, #0052d4, #4364f7, #0052d4);
+            --abu-klik: #808080;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+
+        .navbar {
+            background: var(--biru-glossy);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            z-index: 100;
+        }
+
+        .logo-placeholder {
+            width: 55px; height: 55px;
+            background: rgba(255,255,255,0.2);
+            border: 2px dashed white;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-placeholder img { width: 100%; height: 100%; object-fit: contain; }
+
+        .navbar h1 {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            margin: 0; font-size: 20px; font-weight: bold;
+            letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+
+        .sidebar {
+            width: 250px; background: white; border-right: 1px solid #ddd;
+            padding-top: 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .menu-btn {
+            width: 90%; margin: 8px auto; display: block; padding: 12px 15px;
+            border: 1px solid #ddd; background: #fdfdfd; cursor: pointer;
+            text-align: left; font-weight: bold; border-radius: 8px; transition: 0.3s;
+        }
+
+        .menu-btn.active { background: var(--abu-klik) !important; color: white !important; }
+
+        .content { flex: 1; padding: 30px; overflow-y: auto; }
+
+        .card {
+            background: white; padding: 25px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px;
+        }
+
+        h3 { color: #0052d4; border-bottom: 3px solid #f0f2f5; padding-bottom: 12px; font-size: 18px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .full-width { grid-column: 1 / -1; }
+        .form-group { display: flex; flex-direction: column; }
+        
+        label { font-size: 11px; font-weight: 700; margin-bottom: 5px; color: #555; text-transform: uppercase; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+
+        .sub-section { background: #f8f9fa; border: 1px solid #e9ecef; padding: 20px; border-radius: 8px; margin-top: 8px; }
+
+        /* Tabel */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
+        th { background: #ffff00; border: 1px solid #ccc; padding: 12px; font-weight: 800; }
+        td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+
+        /* Buttons */
+        .btn-save { background: #0052d4; color: white; padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-backup { background: #6c757d; color: white; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; margin-right: 5px; }
+        .btn-restore { background: #28a745; color: white; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-excel { background: #1d6f42; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
+    </style>
+</head>
+<body onload="loadAllData()">
+
+<div class="navbar">
+    <div class="logo-placeholder" id="navLogoContainer">
+        <span style="font-size: 9px; color: white;">LOGO</span>
+    </div>
+    <h1>APLIKASI DAFTAR I</h1>
+</div>
+
+<div class="main-container">
+    <div class="sidebar">
+        <button class="menu-btn active" onclick="showPage('sekolah', this)">Data Sekolah</button>
+        <button class="menu-btn" onclick="showPage('guru', this)">Data Guru</button>
+        <button class="menu-btn" onclick="showPage('pengaturan', this)">Pengaturan & Backup</button>
+    </div>
+
+    <div class="content">
+        <div id="page-sekolah">
+            <div class="card">
+                <h3>DATA SEKOLAH</h3>
+                <input type="file" id="input-logo" accept="image/*" onchange="processLogo(this)" style="margin-bottom: 20px;">
+                <form id="formSekolahDetail">
+                    <div class="form-grid">
+                        <div class="form-group full-width"><label>Nama Sekolah</label><input type="text" id="s_nama"></div>
+                        <div class="form-group"><label>NPSN</label><input type="text" id="s_npsn"></div>
+                        <div class="form-group"><label>Kepala Sekolah</label><input type="text" id="s_kepsek"></div>
+                        <div class="form-group"><label>NIP Kepsek</label><input type="text" id="s_nip_kepsek"></div>
+                    </div>
+                    <div style="margin-top:20px; text-align:right;">
+                        <button type="button" class="btn-save" onclick="saveDataSekolah()">SIMPAN</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="page-guru" style="display:none;">
+            <div class="card">
+                <h3>INPUT DATA GURU</h3>
+                <form id="guruForm">
+                    <input type="hidden" id="editIndex">
+                    <div class="form-grid">
+                        <div class="form-group full-width"><label>Nama & Gelar</label><input type="text" id="g_nama"></div>
+                        <div class="form-group"><label>NIP</label><input type="text" id="g_nip"></div>
+                        <div class="form-group"><label>Golongan</label><input type="text" id="g_gol"></div>
+                        <div class="form-group"><label>Keterangan</label><input type="text" id="g_ket"></div>
+                    </div>
+                    <div style="margin-top:20px; text-align:right;">
+                        <button type="button" class="btn-save" onclick="saveGuru()">SIMPAN DATA GURU</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card table-container">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <h3>TABEL GURU</h3>
+                    <button class="btn-excel" onclick="exportToExcel()">EXPORT EXCEL</button>
+                </div>
+                <table id="guruTable">
+                    <thead>
+                        <tr>
+                            <th>NO</th><th>NAMA</th><th>NIP</th><th>GOL</th><th>KET</th><th class="no-export">AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="guruTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-pengaturan" style="display:none;">
+            <div class="card">
+                <h3>CADANGKAN & PULIHKAN DATA</h3>
+                <p>Gunakan fitur ini untuk memindahkan data antar perangkat atau mengamankan data.</p>
+                <hr>
+                <div style="margin-top: 20px;">
+                    <button class="btn-backup" onclick="exportBackup()">DOWNLOAD BACKUP (.JSON)</button>
+                    <hr>
+                    <label style="display: block; margin-top: 20px;">PILIH FILE BACKUP UNTUK RESTORE:</label>
+                    <input type="file" id="importFile" accept=".json" style="margin-top: 10px;">
+                    <button class="btn-restore" onclick="importBackup()">RESTORE DATA SEKARANG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let dataGuru = JSON.parse(localStorage.getItem('dbGuru')) || [];
+
+    function showPage(page, btn) {
+        document.getElementById('page-sekolah').style.display = (page === 'sekolah') ? 'block' : 'none';
+        document.getElementById('page-guru').style.display = (page === 'guru') ? 'block' : 'none';
+        document.getElementById('page-pengaturan').style.display = (page === 'pengaturan') ? 'block' : 'none';
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    // SIMPAN DATA SEKOLAH
+    function saveDataSekolah() {
+        const sekolah = {
+            nama: document.getElementById('s_nama').value,
+            npsn: document.getElementById('s_npsn').value,
+            kepsek: document.getElementById('s_kepsek').value,
+            nipK: document.getElementById('s_nip_kepsek').value
+        };
+        localStorage.setItem('dbSekolah', JSON.stringify(sekolah));
+        alert("Data Sekolah Tersimpan!");
+    }
+
+    // LOGO
+    function processLogo(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const imgData = e.target.result;
+                document.getElementById('navLogoContainer').innerHTML = `<img src="${imgData}">`;
+                localStorage.setItem('appLogo', imgData);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // DATA GURU
+    function saveGuru() {
+        const editIndex = document.getElementById('editIndex').value;
+        const guru = {
+            nama: document.getElementById('g_nama').value,
+            nip: document.getElementById('g_nip').value,
+            gol: document.getElementById('g_gol').value,
+            ket: document.getElementById('g_ket').value
+        };
+
+        if (editIndex === "") {
+            dataGuru.push(guru);
+        } else {
+            dataGuru[editIndex] = guru;
+            document.getElementById('editIndex').value = "";
+        }
+        localStorage.setItem('dbGuru', JSON.stringify(dataGuru));
+        renderGuruTable();
+        document.getElementById('guruForm').reset();
+    }
+
+    function renderGuruTable() {
+        const tbody = document.getElementById("guruTableBody");
+        tbody.innerHTML = "";
+        dataGuru.forEach((g, index) => {
+            tbody.innerHTML += `<tr>
+                <td>${index+1}</td><td>${g.nama}</td><td>${g.nip}</td><td>${g.gol}</td><td>${g.ket}</td>
+                <td class="no-export">
+                    <button onclick="editGuru(${index})">Edit</button>
+                    <button onclick="deleteGuru(${index})">Hapus</button>
+                </td>
+            </tr>`;
+        });
+    }
+
+    function editGuru(i) {
+        const g = dataGuru[i];
+        document.getElementById('g_nama').value = g.nama;
+        document.getElementById('g_nip').value = g.nip;
+        document.getElementById('g_gol').value = g.gol;
+        document.getElementById('g_ket').value = g.ket;
+        document.getElementById('editIndex').value = i;
+    }
+
+    function deleteGuru(i) {
+        if(confirm("Hapus?")) { dataGuru.splice(i,1); localStorage.setItem('dbGuru', JSON.stringify(dataGuru)); renderGuruTable(); }
+    }
+
+    // --- FITUR BACKUP & RESTORE ---
+    function exportBackup() {
+        const allData = {
+            sekolah: JSON.parse(localStorage.getItem('dbSekolah')),
+            guru: JSON.parse(localStorage.getItem('dbGuru')),
+            logo: localStorage.getItem('appLogo')
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "backup_aplikasi_daftar_i.json");
+        downloadAnchor.click();
+    }
+
+    function importBackup() {
+        const fileInput = document.getElementById('importFile');
+        if (!fileInput.files[0]) { alert("Pilih file dulu!"); return; }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if(data.sekolah) localStorage.setItem('dbSekolah', JSON.stringify(data.sekolah));
+                if(data.guru) {
+                    localStorage.setItem('dbGuru', JSON.stringify(data.guru));
+                    dataGuru = data.guru;
+                }
+                if(data.logo) localStorage.setItem('appLogo', data.logo);
+                
+                alert("Berhasil Restore! Halaman akan dimuat ulang.");
+                location.reload();
+            } catch (err) {
+                alert("File tidak valid!");
+            }
+        };
+        reader.readAsText(fileInput.files[0]);
+    }
+
+    function loadAllData() {
+        const s = JSON.parse(localStorage.getItem('dbSekolah'));
+        if(s) {
+            document.getElementById('s_nama').value = s.nama || '';
+            document.getElementById('s_npsn').value = s.npsn || '';
+            document.getElementById('s_kepsek').value = s.kepsek || '';
+            document.getElementById('s_nip_kepsek').value = s.nipK || '';
+        }
+        const logo = localStorage.getItem('appLogo');
+        if(logo) document.getElementById('navLogoContainer').innerHTML = `<img src="${logo}">`;
+        renderGuruTable();
+    }
+
+    // PWA Service Worker Register
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+        });
+    }
+</script>
+</body>
+</html>
