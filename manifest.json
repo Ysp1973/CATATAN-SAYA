@@ -1,0 +1,15 @@
+{
+  "name": "Aplikasi Daftar I Sekolah",
+  "short_name": "DaftarI",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#0052d4",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
